@@ -1,12 +1,14 @@
 // named import(curly bracket) VS. default import
-import { API_URL } from './config.js';
+import { API_URL, RESULT_PER_PAGE } from './config.js';
 import { getJSON } from './helpers.js';
 
 export const state = {
   recipe: {},
-  secrch: {
+  search: {
     query: '',
     results: [],
+    page: 1,
+    resultPerPage: RESULT_PER_PAGE,
   },
 };
 
@@ -35,11 +37,11 @@ export const loadRecipe = async function (id) {
 
 export const loadSearchResult = async function (query) {
   try {
-    state.secrch.query = query;
+    state.search.query = query;
     const data = await getJSON(`${API_URL}?search=${query}`);
     console.log(data);
 
-    state.secrch.results = data.data.recipes.map(recipe => {
+    state.search.results = data.data.recipes.map(recipe => {
       return {
         id: recipe.id,
         title: recipe.title,
@@ -51,4 +53,12 @@ export const loadSearchResult = async function (query) {
     console.error(`${err} 💥💥💥`);
     throw err;
   }
+};
+
+export const getSearchResultPage = function (page = state.search.page) {
+  state.search.page = page;
+  const start = (page - 1) * state.search.resultPerPage;
+  const end = page * state.search.resultPerPage;
+
+  return state.search.results.slice(start, end);
 };
