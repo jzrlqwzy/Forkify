@@ -24,6 +24,7 @@ const createRecipeObject = function (data) {
     servings: recipe.servings,
     cookingTime: recipe.cooking_time,
     ingredients: recipe.ingredients,
+    ...(recipe.key && { key: recipe.key }),
   };
 };
 
@@ -87,10 +88,10 @@ const persistBookmarks = function () {
 };
 
 export const addBookmark = function (recipe) {
-  // Add bookmark
+  // Add recipe to bookmark recipe array
   state.bookmarks.push(recipe);
 
-  // Mark current recipe as bookmark
+  // Mark current recipe
   if (recipe.id === state.recipe.id) state.recipe.bookmarked = true;
 
   persistBookmarks();
@@ -144,6 +145,7 @@ export const uploadRecipe = async function (newRecipe) {
 
     const data = await sendJSON(`${API_URL}?key=${API_KEY}`, recipe);
     state.recipe = createRecipeObject(data);
+    addBookmark(state.recipe);
   } catch (err) {
     throw err;
   }
