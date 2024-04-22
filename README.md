@@ -1,4 +1,4 @@
-# [Omnifood](https://forkify-lei.netlify.app)
+# [Forkify](https://forkify-lei.netlify.app)
 
 ## Project Introduction
 
